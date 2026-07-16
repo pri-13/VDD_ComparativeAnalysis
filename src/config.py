@@ -57,3 +57,23 @@ MODELS = [
     "densenet121",
     "efficientnetb0"
 ]
+
+#save models in drive
+MODEL_ROOT = Path(os.getenv("MODEL_ROOT", PROJECT_ROOT))
+
+SAVED_MODELS_DIR = MODEL_ROOT / "saved_models"
+
+OUTPUT_ROOT = Path(os.getenv("OUTPUT_ROOT", PROJECT_ROOT))
+
+OUTPUTS_DIR = OUTPUT_ROOT / "outputs"
+
+EDA_OUTPUT_DIR = OUTPUTS_DIR / "eda"
+TRAINING_OUTPUT_DIR = OUTPUTS_DIR / "training"
+EVALUATION_OUTPUT_DIR = OUTPUTS_DIR / "evaluation"
+COMPARISON_OUTPUT_DIR = OUTPUTS_DIR / "comparison"
+
+LOG_ROOT = Path(os.getenv("LOG_ROOT", PROJECT_ROOT))
+
+LOGS_DIR = LOG_ROOT / "logs"
+TRAINING_LOGS_DIR = LOGS_DIR / "training_logs"
+NOTEBOOK_LOGS_DIR = LOGS_DIR / "notebook_logs"

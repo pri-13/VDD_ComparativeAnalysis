@@ -1,0 +1,25 @@
+# virtual environment
+.venv/
+
+# python
+__pycache__/
+*.pyc
+
+# jupyter
+.ipynb_checkpoints/
+
+# outputs
+outputs/
+saved_models/
+logs/
+
+# vscode
+.vscode/
+
+# dataset
+processed_data/
+data/
+
+# system
+.DS_Store
+Thumbs.db

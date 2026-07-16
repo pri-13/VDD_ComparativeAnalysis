@@ -1,18 +1,17 @@
 #centralized configuration file for the Vehicle Damage Classification project.
+import os
 import yaml
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
+#dataset root (local by default, override in Colab using DATASET_ROOT)
+DATASET_ROOT = Path(os.getenv("DATASET_ROOT", PROJECT_ROOT))
+
 #data directories
 DATA_DIR = PROJECT_ROOT / "data"
-PROCESSED_DATA_DIR = PROJECT_ROOT / "processed_data"
+PROCESSED_DATA_DIR = DATASET_ROOT / "processed_data"
 
-TRAIN_DIR = DATA_DIR / "train"
-VAL_DIR = DATA_DIR / "val"
-TEST_DIR = DATA_DIR / "test"
-
-#processed classification dataset
 TRAIN_DIR = PROCESSED_DATA_DIR / "train"
 VAL_DIR = PROCESSED_DATA_DIR / "val"
 TEST_DIR = PROCESSED_DATA_DIR / "test"
@@ -36,6 +35,7 @@ NOTEBOOK_LOGS_DIR = LOGS_DIR / "notebook_logs"
 #dataset configuration
 with open(DATA_DIR / "data.yaml") as file:
     names = yaml.safe_load(file)["names"]
+
 CLASS_NAMES = list(names.values()) if isinstance(names, dict) else names
 NUM_CLASSES = len(CLASS_NAMES)
 
@@ -49,11 +49,11 @@ EPOCHS = 20
 LEARNING_RATE = 1e-4
 RANDOM_SEED = 42
 
-DATASET_SPLITS = {
-    "train": TRAIN_DIR,
-    "val": VAL_DIR,
-    "test": TEST_DIR
-}
-
 #model configuration
-MODELS = ["custom_cnn", "vgg16", "mobilenetv2", "densenet121", "efficientnetb0"]
+MODELS = [
+    "custom_cnn",
+    "vgg16",
+    "mobilenetv2",
+    "densenet121",
+    "efficientnetb0"
+]

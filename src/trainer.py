@@ -15,50 +15,20 @@ def get_callbacks(model_name):
         tf.keras.callbacks.ReduceLROnPlateau(
             monitor="val_loss",
             factor=0.2,
-            patience=3,
+            patience=2,
             verbose=1
         ),
         tf.keras.callbacks.ModelCheckpoint(
             filepath=SAVED_MODELS_DIR / f"{model_name}.keras",
-            monitor="val_loss",
+            monitor="val_accuracy",
+            mode="max",
             save_best_only=True,
             verbose=1
         ),
         tf.keras.callbacks.CSVLogger(
-            TRAINING_LOGS_DIR / f"{model_name}.log"
+            TRAINING_LOGS_DIR / f"{model_name}.csv"
         )
     ]
-
-#train keras model
-def train_model(
-    model,
-    train_dataset,
-    validation_dataset,
-    model_name
-):
-    start_time = time.time()
-    history = model.fit(
-        train_dataset,
-        validation_data=validation_dataset,
-        epochs=EPOCHS,
-        callbacks=get_callbacks(model_name),
-        verbose=1
-    )
-    training_time = round(time.time() - start_time, 2)
-    info = pd.DataFrame({
-        "Model": [model_name],
-        "Epochs": [len(history.history["loss"])],
-        "Best Train Accuracy": [max(history.history["accuracy"])],
-        "Best Validation Accuracy": [max(history.history["val_accuracy"])],
-        "Best Train Loss": [min(history.history["loss"])],
-        "Best Validation Loss": [min(history.history["val_loss"])],
-        "Training Time (sec)": [training_time]
-    })
-    info.to_csv(
-        TRAINING_OUTPUT_DIR / f"{model_name}_training_info.csv",
-        index=False
-    )
-    return history
 
 #save training history
 def save_history(history, model_name):
@@ -73,3 +43,41 @@ def clear_memory(model=None):
         del model
     tf.keras.backend.clear_session()
     gc.collect()
+
+#train keras model
+def train_model(
+    model,
+    train_dataset,
+    validation_dataset,
+    model_name
+):
+    start_time = time.time()
+
+    history = model.fit(
+        train_dataset,
+        validation_data=validation_dataset,
+        epochs=EPOCHS,
+        callbacks=get_callbacks(model_name),
+        verbose=1
+    )
+
+    training_time = round(time.time() - start_time, 2)
+
+    save_history(history, model_name)
+
+    pd.DataFrame({
+        "Model":[model_name],
+        "Epochs":[len(history.history["loss"])],
+        "Best Train Accuracy":[max(history.history["accuracy"])],
+        "Best Validation Accuracy":[max(history.history["val_accuracy"])],
+        "Best Train Loss":[min(history.history["loss"])],
+        "Best Validation Loss":[min(history.history["val_loss"])],
+        "Training Time (sec)":[training_time]
+    }).to_csv(
+        TRAINING_OUTPUT_DIR / f"{model_name}_training_info.csv",
+        index=False
+    )
+
+    clear_memory(model)
+
+    return history

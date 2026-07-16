@@ -18,8 +18,8 @@ logs/
 
 # dataset
 processed_data/
-data/
-
+data/*
+!data/data.yaml
 # system
 .DS_Store
 Thumbs.db
